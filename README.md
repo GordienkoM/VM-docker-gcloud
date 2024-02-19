@@ -169,3 +169,11 @@ This pipeline basically says:
 3. make a change to `echo "I WAS UPDATED BY THE CICD PIPELINE" > test.txt`
 4. push the change to the `main` branch and wait for the action to complete
 5. check the VM's IP and see if the file was updated at `/test.txt` URL
+
+
+## deploy like in 2024
+
+- go inside the VM and delete the file `test.txt` (delete its creation inside the pipeline as well)
+- add the new GitHub Actions job that copies the contents of the `html` folder within the VM's `/var/www/html` folder
+- change the contents of the `html` folder in your repo
+- check that the changes have been reflected on the Internet after the action has run
