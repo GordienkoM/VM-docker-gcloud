@@ -1,9 +1,0 @@
-  # ! before testing the CI/CD pipeline:
-  # ! 1. `gcloud compute ssh VM_NAME --zone=ZONE` to create SSH keys
-  # gcloud compute ssh test-vm --zone=europe-west1-b` to create SSH keys
-  # find key in C:\Users\mgord\.ssh
-
-  # ! 2. write down the location of the PRIVATE key (not the one ending with `.pub`)
-  # ! 3. `eval "$(ssh-agent -s)" && ssh-add google_compute_engine` => this tells the SSH agent on your machine that you acting as X
-  eval "$(ssh-agent -s)" && ssh-add C:\Users\mgord\.ssh\google_compute_engine
-  # ! 4. `ssh USERNAME@IP_ADRESS` 
