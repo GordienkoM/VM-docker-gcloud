@@ -70,6 +70,19 @@ gcloud compute instances create test-server \
 
 `docker build --build-arg PROJECT_NAME=markets-agent --build-arg SERVICE_ACCOUNT_EMAIL=vms-sa@markets-agent.iam.gserviceaccount.com -t gcp-vm .`
 
+But before moving on with the next step, here is a diagram showing this process:
+
+```mermaid
+graph TD
+    A[Create service account on GCP] --> B[Give service account permissions to manage VMs]
+    B --> C[Give service account role to use default compute service account]
+    C --> D[Generate JSON key for service account]
+    D --> E[Containerize script that uses gcloud CLI with JSON key]
+    E --> F[Create VM instance with startup script installing Apache]
+    F --> G[Enable HTTP traffic to VM by creating firewall rule]
+    G --> H[Visit IP of VM and see default Apache landing page]
+```
+
 ## CI/CD deployment
 
 Most of the Apache servers host your website files under `/var/www`.
@@ -114,9 +127,55 @@ The first time you'll run this, you will encounter a permissions issue: it's bec
 
 Now if you copy again the file and go to `http://IP/test.txt` you should see the content of the file.
 
+Here is a diagram showing all the manual steps:
+
+```mermaid
+sequenceDiagram
+    participant Local Machine
+    participant Cloud VM
+
+    activate Local Machine
+    Local Machine->>Cloud VM: Connect to VM with SSH (gcloud)
+    deactivate Local Machine
+
+    activate Cloud VM
+    Cloud VM->>Local Machine: Quit VM
+    deactivate Cloud VM
+
+    activate Local Machine
+    Local Machine->>Local Machine: Generate SSH keys
+    deactivate Local Machine
+
+    activate Local Machine
+    Local Machine->>Cloud VM: Copy SSH keys to VM
+    deactivate Local Machine
+
+    activate Cloud VM
+    Cloud VM->>Cloud VM: Add SSH keys to authorized_keys
+    deactivate Cloud VM
+
+    activate Local Machine
+    Local Machine->>Cloud VM: Connect to VM with SSH (generic)
+    deactivate Local Machine
+
+    activate Cloud VM
+    Cloud VM->>Cloud VM: Change ownership of /var/www/html to VM user
+    deactivate Cloud VM
+
+    activate Local Machine
+    Local Machine->>Cloud VM: Upload test file to /var/www/html with scp
+    deactivate Local Machine
+
+    activate Local Machine
+    Local Machine->>Internet: Access test file via web browser
+    deactivate Local Machine
+
+    note over Local Machine: Cloud VM,Cloud VM: Success! File accessible.
+```
+
 Ok, now let's update our site with a pipeline !
 
-## automate the process
+### automate the process
 
 Now we are ready to do all of the above via GitHub Actions.
 
@@ -171,7 +230,7 @@ This pipeline basically says:
 5. check the VM's IP and see if the file was updated at `/test.txt` URL
 
 
-## deploy like in 2024
+#### deploy like in 2024
 
 - go inside the VM and delete the file `test.txt` (delete its creation inside the pipeline as well)
 - add the new GitHub Actions job that copies the contents of the `html` folder within the VM's `/var/www/html` folder
@@ -207,6 +266,7 @@ What views/pages do we need ?
 - login page
 - home => lists all tickets
   - ability to delete a ticket
+  - priority of tickets
   - status labels of the tickets
   - ticket assignement button
 - registration page
@@ -217,6 +277,7 @@ What views/pages do we need ?
   - edit form for the ticket
   - field for resolution of ticket
   - label for ticket status
+  - priority of tickets
   - ticket assignement button
 - ticket creation page
 - users admin page:
@@ -226,3 +287,24 @@ What views/pages do we need ?
   - there is an explanation of each role
 
 ... the app' complexifies now, it's about time we use a project management tool !
+
+#### homepage with list of tickets
+
+1st [Gemini](https://gemini.google.com/app) prompt =>
+
+```
+You are a frontend developer. 
+Please write the HTML code that display a list of tickets as a table.
+Each ticket row has:
+
+- ability to delete a ticket
+- status labels of the tickets
+- ticket assignement button
+```
+
+### moving on to 3-tier architecture
+
+Now we want to:
+
+- display the list of tickets dynamically (from the database)
+- restrict who can access the database directly => [3-tier architecture](https://fr.wikipedia.org/wiki/Architecture_trois_tiers)
