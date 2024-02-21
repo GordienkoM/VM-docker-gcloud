@@ -1,59 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Firebase loads first -->
+    <script type="module" src="./javascript/firebase.js"></script>
+
+    <!-- Meta -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PerfectTicket | your tickets</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
 
-        th, td {
-            padding: 8px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
+    <!-- Favicon part -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .action-buttons {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .button {
-            padding: 5px 10px;
-            border: 1px solid #007bff;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .button:hover {
-            background-color: #0062cc;
-        }
-
-        .status-label {
-            background-color: #f0ad4e;
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-
-        .assigned {
-            background-color: #5cb85c;
-        }
-
-        .unassigned {
-            background-color: #f0ad4e;
-        }
-    </style>
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <h1>Perfect Ticket | your tickets</h1>
