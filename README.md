@@ -237,16 +237,65 @@ This pipeline basically says:
 - change the contents of the `html` folder in your repo
 - check that the changes have been reflected on the Internet after the action has run
 
+Here is the diagram showing the process =>
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Github
+    participant Github Runner
+    participant VM
+
+    activate User
+    User->>Github: Create repo secrets (SSH key, host, username)
+    activate Github
+
+    activate User
+    User->>Github: Push code with workflow file
+    activate Github
+    Github->>Github: Execute workflow associated with the branch
+    deactivate Github
+
+    activate Github Runner
+    Github Runner->>Github: Load SSH secrets from Github
+    activate Github Runner
+
+    Github Runner->>VM: Connect via SSH
+    activate VM
+    VM->>VM: Update system dependencies
+    deactivate VM
+
+    activate Github
+    Github Runner->>Github: Clone repository
+    Github Runner->>VM: Connect via SSH (new connection)
+    deactivate Github
+
+    activate Github Runner
+    Github Runner->>VM: scp local "html" folder to "/var/www/html"
+    deactivate Github Runner
+
+    alt GitOps in action (summary of the steps above)!
+    activate User
+    User->>Github: Push changes to frontend code
+    activate Github
+    Github->>Github: Execute workflow
+    activate Github
+    Github->>VM: Update frontend in "/var/www/html"
+    deactivate Github
+    deactivate User
+end
+```
+
 ## spec out the app's features: what does the app' do?
 
 It's an app' to manage tickets.
 
-- CRUD tickets
-- CRUD users
 - a `ticket` is a the description of a problem or a task
 - a ticket can be opened, closed
 - a ticket can have comments
 - a ticket has a resolution
+- CRUD (Create Read Update Delete) tickets
+- CRUD users
 - there are permissions in the application:
   - CRUD-related permissions
   - close a ticket
@@ -308,3 +357,5 @@ Now we want to:
 
 - display the list of tickets dynamically (from the database)
 - restrict who can access the database directly => [3-tier architecture](https://fr.wikipedia.org/wiki/Architecture_trois_tiers)
+
+![3-tier architecture](./3tier-fr.png)
