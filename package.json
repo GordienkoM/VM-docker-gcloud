@@ -1,11 +1,15 @@
 {
-  "name": "app",
+  "name": "perfect-ticket",
   "version": "1.0.0",
-  "description": "- enable Compute Engine API\r - install `gcloud` CLI and configure it\r - run `gcloud` to create an instance of a VM (replace with the correct values) =>",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "the tickets app' you want to marry with",
+  "dependencies": {
+    "firebase": "^10.8.0"
   },
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
+  },
+  "scripts": {
+    "build": "webpack --mode=development"
+  }
 }
