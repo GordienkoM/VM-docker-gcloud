@@ -4,6 +4,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
+import { getDatabase } from "firebase/database";
+
 // TODO: Add SDKs for Firebase products that you want to use
 
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -27,8 +29,9 @@ const firebaseConfig = {
 
   appId: "1:335913192253:web:ad93667d20ffa8b986d354",
 
-  measurementId: "G-K3SLVQNNWN"
+  measurementId: "G-K3SLVQNNWN",
 
+  databaseUrl:"https://fluid-furnace-412810-default-rtdb.europe-west1.firebasedatabase.app/"
 };
 
 
@@ -37,3 +40,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const analytics = getAnalytics(app);
+
+// initialize database
+const database = getDatabase(app);

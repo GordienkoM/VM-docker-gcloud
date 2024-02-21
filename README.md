@@ -351,11 +351,36 @@ Each ticket row has:
 - ticket assignement button
 ```
 
-### moving on to 3-tier architecture
+### the swag part
+
+We have generated favicons and added them to our project.
+
+### moving on to 3-tier architecture ?
 
 Now we want to:
 
-- display the list of tickets dynamically (from the database)
+- display the list of tickets dynamically (from a database)
 - restrict who can access the database directly => [3-tier architecture](https://fr.wikipedia.org/wiki/Architecture_trois_tiers)
 
 ![3-tier architecture](./3tier-fr.png)
+
+
+... finally we don't do that and we use a simplified version of this architecture using a Firebase instance, which means we only have two tiers: the frontend and the database.
+
+### initiate a Firebase project
+
+- go to the Firebase and create your project attached to your GCP project
+- copy the HTML snippet into your code (with the correct keys)
+- verify that everything loads (Firebase + favicons) locally
+- deploy online and verify
+
+### now, let's us a Firebase realtime database
+
+- we need to compile Javascript modular code so that the browser understands it
+- we need an intermediary step to push the Firebase code to the browser => we are going to use for Node.JS for this
+- we don't want to install Node.JS on our local machine, so we are going to use Docker for this
+- we create a Docker image which runs forever
+- we are going to do Node.JS operations inside the container
+- with a volume, all our changes will be reflected in our repo
+
+Try this out ! run the Node.JS Docker Compose service, create a file inside the container under the `/app` folder, see it in your local machine.
