@@ -2,7 +2,7 @@ name: cicd
 
 on:
   push:
-      branches: [main]
+    branches: [main]
 
 jobs:
 
@@ -11,6 +11,17 @@ jobs:
     name: gcp-vm-sysadmin
     runs-on: ubuntu-latest
     steps:
+    - name: actions/checkout@v4
+      uses: actions/checkout@v4 
+    - name: copy-frontend
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIV_KEY }}
+        port: 22
+        source: "conf/apache.conf"
+        target: /home/${{ secrets.SSH_USERNAME }}
     # you can have a glance at all the available actions in https://github.com/marketplace?type=actions
     - name: sysadmin ops on GCP VM
       uses: appleboy/ssh-action@v1.0.1
@@ -28,9 +39,15 @@ jobs:
         # all the commands you see after the `|` will be executed in the remote machine
         script: |
           sudo apt-get update && sudo apt-get upgrade -y
+          cd /etc/apache2/sites-available
+          sudo cp ~/conf/apache.conf /etc/apache2/sites-available/000-default.conf
+          sudo rm -rf ./conf
+          sudo a2enmod rewrite
+          sudo a2enmod headers
+          sudo systemctl restart apache2
 
-  update-frontend:
-    name: update-frontend
+  update-application:
+    name: update-application
     needs: gcp-vm-sysadmin
     runs-on: ubuntu-latest
     steps:
@@ -46,5 +63,5 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIV_KEY }}
           port: 22
-          source: html/*
-          target: /var/www
+          source: "*"
+          target: /var/www/html
