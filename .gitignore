@@ -2,3 +2,5 @@
 vms-sa.json
 beforeCICD.txt
 node_modules
+
+/vendor/
