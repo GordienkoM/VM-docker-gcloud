@@ -441,3 +441,16 @@ Let's start with the web API.
 ### getting our tickets from our first API route
 
 - now we have moved the tickets to a PHP API endpoint and we have set up routing in the `index.php` file
+- we created an `/api/tickets` endpoint to get our list of tickets from the frontend
+- we have installed our first [Composer](https://getcomposer.org/) package (with packages found on [Packagist](https://packagist.org/))
+- we created a dynamic environment variable `HOST` to select the correct host for Javascript based on the environment
+
+... update your `HOST` environment variable locally and on the remote VM!
+
+### cool, let's move on to the database
+
+- we have created an instance of PostgreSQL in our Docker Compose file + a `pgadmin` GUI instance to manage it
+- run the dockerized locally and connect to your database with `pgadmin`!
+- we are ready now to a remote Supabase instance; why Supabase? because it's easy and it's Postgres as well...
+
+... create a supabase instance, connect to it from your PHP code locally, THEN connect to it from your PHP code on the remote VM.
