@@ -1,6 +1,7 @@
 .env
 vms-sa.json
 beforeCICD.txt
+github_secrets.txt
 node_modules
 
 /vendor/
