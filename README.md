@@ -447,6 +447,8 @@ Let's start with the web API.
 
 ... update your `HOST` environment variable locally and on the remote VM!
 
+The `HOST` variable should be equal to `http://REMOTE_VM_IP`.
+
 ### cool, let's move on to the database
 
 - we have created an instance of PostgreSQL in our Docker Compose file + a `pgadmin` GUI instance to manage it
@@ -463,3 +465,5 @@ REMINDER: you need to install your application dependencies with Composer once t
 - `composer install`
 
 ... this wil1l map the `vendor` folder, that contains all the dependencies, to your local machine.
+
+Remember to run the migrations from the VM.
