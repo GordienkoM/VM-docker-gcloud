@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once '/var/www/html/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv = Dotenv\Dotenv::createImmutable('/var/www/html');
 $dotenv->load();
 
 // get the requested path
@@ -11,7 +11,7 @@ $path = $_SERVER['REQUEST_URI'];
 // ROUTING
 switch ($path) {
     case '/':
-        $home_html_contents = file_get_contents(__DIR__ . '/../views/home.html');
+        $home_html_contents = file_get_contents('/var/www/html/views/home.html');
         $home_html_contents = str_replace('$HOST', $_ENV['HOST'], $home_html_contents);
         // get contents of the `views/home.html`
         echo $home_html_contents;
@@ -32,11 +32,10 @@ switch ($path) {
             // echo "Connected successfully";
         } catch(PDOException $e) {
             // TODO log errors into a file
-            // echo "Connection failed: " . $e->getMessage();
+            echo "Connection failed: " . $e->getMessage();
         }
 
         // making a dummy query
-        // TODO get tickets from DB here
         $sql = "SELECT title, description, status, assigned_to, created_at
             FROM tickets";
         $stmt = $conn->prepare($sql);

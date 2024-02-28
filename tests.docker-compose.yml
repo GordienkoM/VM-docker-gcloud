@@ -1,0 +1,19 @@
+# simplified Docker Compose file for the tests
+services:
+
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+
+  postgres:
+    image: "postgres:16"
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - 5432:5432

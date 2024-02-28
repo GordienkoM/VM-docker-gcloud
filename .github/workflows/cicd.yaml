@@ -6,9 +6,29 @@ on:
 
 jobs:
 
+  # Continuous Integration,
+  # integration tests will use a dockerized database
+  local-integration-tests:
+    # GitHub runner has Docker installed
+    runs-on: ubuntu-latest
+    steps:
+    - name: actions/checkout@v4
+      uses: actions/checkout@v4
+    - name: run tests
+      run: |
+        touch .env
+        echo "DB_HOST=postgres" >> .env
+        echo "DB_NAME=postgres" >> .env
+        echo "DB_PASSWORD=postgres" >> .env
+        echo "DB_PORT=5432" >> .env
+        echo "DB_USERNAME=postgres" >> .env
+        docker compose  -f tests.docker-compose.yml up --build --force-recreate -d 
+        docker compose exec frontend bash -c "composer install && /var/www/html/vendor/bin/phpunit tests/HomepageIntegrationTest.php --colors && /var/www/html/vendor/bin/phpunit tests/ApiTicketsIntegrationTest.php --colors"
+
   # in this job, we will install/update dependencies and change global environment
-  sys-deps:
-    name: sys-deps
+  remote-sys-deps:
+    name: remote-sys-deps
+    needs: local-integration-tests
     runs-on: ubuntu-latest
     steps:
     - name: actions/checkout@v4
@@ -41,7 +61,7 @@ jobs:
         script: |
           echo "updating system"
           sudo apt-get update && sudo apt-get upgrade -y
-          sudo apt-get install -y git libpq-dev php php-pgsql zip
+          sudo apt-get install -y git libpq-dev php php-pgsql php-mbstring php-xml zip
           echo "installing apache"
           cd /etc/apache2/sites-available
           sudo cp ~/conf/apache.conf /etc/apache2/sites-available/000-default.conf
@@ -56,9 +76,9 @@ jobs:
           php -r "unlink('composer-setup.php');"
           sudo mv composer.phar /usr/local/bin/composer
 
-  update-application:
-    name: update-application
-    needs: sys-deps
+  update-remote-application:
+    name: update-remote-application
+    needs: remote-sys-deps
     runs-on: ubuntu-latest
     steps:
       # we checkout the repo
